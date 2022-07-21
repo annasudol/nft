@@ -6,10 +6,12 @@ import { BaseLayout, NftList } from '@ui';
 import nfts from "../content/meta.json";
 import { NftMeta } from '@_types/nft';
 import { useWeb3 } from '@providers/web3';
+import { useAccount } from '@hooks/index';
 
 const Home: NextPage = () => {
   const { provider, contract } = useWeb3();
-
+  const {data} = useAccount("Random")
+  console.log(contract, 'contract')
   const getNftInfo = async () => {
     console.log(await contract!.name());
     console.log(await contract!.symbol());
