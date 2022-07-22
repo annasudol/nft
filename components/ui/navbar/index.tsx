@@ -2,10 +2,9 @@
 
 import { Disclosure, Menu } from '@headlessui/react';
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline';
+import { useAccount } from '@hooks/web3';
 import Link from 'next/link';
 import ActiveLink from '../link';
-import { useAccount } from '@hooks/index';
-import { useWeb3 } from '@providers/web3';
 
 const navigation = [
   { name: 'Marketplace', href: '/', current: true },
@@ -17,10 +16,10 @@ function classNames(...classes: string[]) {
 }
 
 export default function Navbar() {
-  const { hooks } = useWeb3();
-  const { data } = hooks.useAccount("");
+  const { account } = useAccount();
 
-  console.log(data);
+  console.log(account.data);
+
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
