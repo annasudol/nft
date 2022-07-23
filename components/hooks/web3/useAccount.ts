@@ -5,13 +5,15 @@ import { useEffect } from 'react';
 
 type UseAccountResponse = {
   connect: ()=> void;
+  isLoading: boolean;
+  isInstalled: boolean;
 }
 type AccountHookFactory = CryptoHookFactory<string, UseAccountResponse>
 
 export type UseAccountHook = ReturnType<AccountHookFactory>
 
-export const hookFactory: AccountHookFactory = ({provider, ethereum}) => (params) => {
-  const {data, mutate, ...swr} =  useSWR(provider ? "web3/useAccount" : null, async()=> {
+export const hookFactory: AccountHookFactory = ({provider, ethereum, isLoading}) => (params) => {
+  const {data, mutate, isValidating, ...swr} =  useSWR(provider ? "web3/useAccount" : null, async()=> {
     const accounts = await provider!.listAccounts();
     const account =  accounts[0];
     if (!account) {
@@ -44,5 +46,13 @@ export const hookFactory: AccountHookFactory = ({provider, ethereum}) => (params
       console.error(err);
     }
   }
-  return {...swr, connect};
+  return {
+    ...swr,
+    data,
+    isValidating,
+    isLoading: isLoading || isValidating,
+    isInstalled: ethereum?.isMetaMask || false,
+    mutate,
+    connect
+  };
 }
